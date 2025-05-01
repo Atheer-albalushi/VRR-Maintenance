@@ -76,35 +76,52 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>RUSAYL OMAN OIL 7307</td>
-        <td style="direction: ltr;"><script>document.write(new Date().toLocaleDateString('en-GB'));</script></td>
-        <td>
-          <select>
-            <option class="status-green">VRR Working well</option>
-            <option class="status-red">VRR not working-Needs team check & care</option>
-            <option class="status-red">VRR show low recovery-Needs team check & care</option>
-            <option class="status-yellow">VRR Under observation</option>
-            <option class="status-purple">Oman Oil Responsibility</option>
-            <option class="status-red">Need Cleaning - See the graph</option>
-            <option class="status-white">VRR Under Maintenance</option>
-          </select>
-        </td>
-        <td><input type="file" accept="image/*"></td>
-        <td><textarea rows="2"></textarea></td>
-        <td><textarea rows="2"></textarea></td>
-        <td>
-          <select>
-            <option>Non</option>
-            <option>Arjun Chakramanath</option>
-            <option>Ahmed Saif Ahmed Al Hadhrami</option>
-            <option>Said Ali Salim Bait Said</option>
-            <option>Sultan Al-Ruzaiqi</option>
-            <option>Unni - Compressor Team</option>
-          </select>
-        </td>
-        <td><textarea rows="2"></textarea></td>
-      </tr>
+      <!-- Template row, repeated 25 times with different site names -->
+      <script>
+        const sites = [
+          "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
+          "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
+          "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
+          "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
+          "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
+        ];
+        const today = new Date().toLocaleDateString('en-GB');
+        const tbody = document.currentScript.parentElement;
+        sites.forEach(site => {
+          const row = `
+            <tr>
+              <td>${site}</td>
+              <td style="direction: ltr;">${today}</td>
+              <td>
+                <select>
+                  <option class="status-green">VRR Working well</option>
+                  <option class="status-red">VRR not working-Needs team check & care</option>
+                  <option class="status-red">VRR show low recovery-Needs team check & care</option>
+                  <option class="status-yellow">VRR Under observation</option>
+                  <option class="status-purple">Oman Oil Responsibility</option>
+                  <option class="status-red">Need Cleaning - See the graph</option>
+                  <option class="status-white">VRR Under Maintenance</option>
+                </select>
+              </td>
+              <td><input type="file" accept="image/*"></td>
+              <td><textarea rows="2"></textarea></td>
+              <td><textarea rows="2"></textarea></td>
+              <td>
+                <select>
+                  <option>Non</option>
+                  <option>Arjun Chakramanath</option>
+                  <option>Ahmed Saif Ahmed Al Hadhrami</option>
+                  <option>Said Ali Salim Bait Said</option>
+                  <option>Sultan Al-Ruzaiqi</option>
+                  <option>Unni - Compressor Team</option>
+                </select>
+              </td>
+              <td><textarea rows="2"></textarea></td>
+            </tr>
+          `;
+          tbody.insertAdjacentHTML('beforeend', row);
+        });
+      </script>
     </tbody>
   </table>
 
@@ -119,3 +136,4 @@
   </script>
 </body>
 </html>
+
