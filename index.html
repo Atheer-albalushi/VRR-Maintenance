@@ -1,27 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Machine Maintenance Tracker</title>
+  <meta charset="UTF-8">
+  <title>VRRefiner Maintenance</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 20px;
+      table-layout: fixed;
     }
+
     th, td {
-      border: 1px solid #aaa;
+      border: 1px solid #ccc;
       padding: 8px;
-      text-align: left;
+      vertical-align: top;
     }
+
     th {
-      background-color: #f2f2f2;
+      background-color: #f4f4f4;
     }
+
     textarea {
       width: 100%;
       resize: vertical;
     }
+
     select, input[type="file"] {
       width: 100%;
     }
@@ -29,7 +42,8 @@
 </head>
 <body>
 
-  <h1>Machine Maintenance Tracker</h1>
+  <h1>VRRefiner Maintenance</h1>
+
   <table>
     <thead>
       <tr>
@@ -43,13 +57,21 @@
         <th>Needed HSE Documents</th>
       </tr>
     </thead>
-    <tbody id="maintenanceTableBody">
-      <!-- Rows will be generated here -->
+    <tbody id="maintenanceTable">
+      <!-- Rows will be generated dynamically -->
     </tbody>
   </table>
 
   <script>
-    const deviceStatusOptions = [
+    const siteNames = [
+      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
+      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
+      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
+      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
+      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
+    ];
+
+    const statusOptions = [
       "VRR Working well",
       "VRR not working - Needs team check & care",
       "VRR show low recovery - Needs team check & care",
@@ -57,82 +79,85 @@
     ];
 
     const responsiblePersons = [
-      "John Smith",
-      "Sara Ahmed",
-      "Mohamed Ali",
-      "Fatima Noor",
-      "Maintenance Team"
+      "Arjun Chakramanath",
+      "Ahmed Saif Ahmed Al Hadhrami",
+      "Said Ali Salim Bait Said",
+      "Sultan Al-Ruzaiqi",
+      "Unni - Compressor Team"
     ];
 
-    const tableBody = document.getElementById('maintenanceTableBody');
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toLocaleDateString('en-GB'); // e.g. "01/05/2025"
 
-    for (let i = 1; i <= 25; i++) {
-      const row = document.createElement('tr');
+    const table = document.getElementById("maintenanceTable");
+
+    siteNames.forEach(site => {
+      const row = document.createElement("tr");
 
       // Site Name
-      const siteCell = document.createElement('td');
-      siteCell.textContent = `Site ${i}`;
+      const siteCell = document.createElement("td");
+      siteCell.textContent = site;
       row.appendChild(siteCell);
 
       // Inspection Date
-      const dateCell = document.createElement('td');
+      const dateCell = document.createElement("td");
       dateCell.textContent = today;
+      dateCell.style.direction = "ltr"; // Make date left-to-right
       row.appendChild(dateCell);
 
       // Device Status
-      const statusCell = document.createElement('td');
-      const statusSelect = document.createElement('select');
-      deviceStatusOptions.forEach(option => {
-        const opt = document.createElement('option');
-        opt.value = opt.textContent = option;
-        statusSelect.appendChild(opt);
+      const statusCell = document.createElement("td");
+      const statusSelect = document.createElement("select");
+      statusOptions.forEach(status => {
+        const option = document.createElement("option");
+        option.value = option.text = status;
+        statusSelect.appendChild(option);
       });
       statusCell.appendChild(statusSelect);
       row.appendChild(statusCell);
 
       // Issue Picture
-      const picCell = document.createElement('td');
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      picCell.appendChild(fileInput);
-      row.appendChild(picCell);
+      const pictureCell = document.createElement("td");
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      pictureCell.appendChild(fileInput);
+      row.appendChild(pictureCell);
 
       // Issues Notes
-      const issueNotesCell = document.createElement('td');
-      const issueTextarea = document.createElement('textarea');
+      const issueCell = document.createElement("td");
+      const issueTextarea = document.createElement("textarea");
       issueTextarea.rows = 2;
-      issueNotesCell.appendChild(issueTextarea);
-      row.appendChild(issueNotesCell);
+      issueCell.appendChild(issueTextarea);
+      row.appendChild(issueCell);
 
       // Work Plan
-      const planCell = document.createElement('td');
-      const planTextarea = document.createElement('textarea');
+      const planCell = document.createElement("td");
+      const planTextarea = document.createElement("textarea");
       planTextarea.rows = 2;
       planCell.appendChild(planTextarea);
       row.appendChild(planCell);
 
       // Responsible Person
-      const personCell = document.createElement('td');
-      const personSelect = document.createElement('select');
+      const personCell = document.createElement("td");
+      const personSelect = document.createElement("select");
       responsiblePersons.forEach(person => {
-        const opt = document.createElement('option');
-        opt.value = opt.textContent = person;
-        personSelect.appendChild(opt);
+        const option = document.createElement("option");
+        option.value = option.text = person;
+        personSelect.appendChild(option);
       });
       personCell.appendChild(personSelect);
       row.appendChild(personCell);
 
       // Needed HSE Documents
-      const hseCell = document.createElement('td');
-      const hseTextarea = document.createElement('textarea');
+      const hseCell = document.createElement("td");
+      const hseTextarea = document.createElement("textarea");
       hseTextarea.rows = 2;
       hseCell.appendChild(hseTextarea);
       row.appendChild(hseCell);
 
-      tableBody.appendChild(row);
-    }
+      table.appendChild(row);
+    });
   </script>
+
 </body>
 </html>
