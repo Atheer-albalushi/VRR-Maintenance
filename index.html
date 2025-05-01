@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>VRRefiner Maintenance</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body {
       font-family: "Times New Roman", serif;
@@ -16,9 +17,172 @@
       color: #2e3c50;
     }
 
+    button {
+      margin-bottom: 20px;
+      font-size: 12px;
+      padding: 8px 12px;
+      background-color: #2e3c50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #1c2938;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 25px;
       table-layout: fixed;
-      background-color
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background-color: #d9e6f2;
+      color: #000;
+    }
+
+    textarea, select, input[type="file"] {
+      width: 100%;
+      font-family: "Times New Roman", serif;
+      font-size: 12px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>VRRefiner Maintenance</h1>
+
+  <button onclick="exportToExcel()">Export to Excel</button>
+
+  <table id="maintenanceTable">
+    <thead>
+      <tr>
+        <th>Site Name</th>
+        <th>Inspection Date</th>
+        <th>Device Status</th>
+        <th>Issue Picture</th>
+        <th>Issues Notes</th>
+        <th>Work Plan</th>
+        <th>Responsible Person</th>
+        <th>Needed HSE Documents</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody">
+      <!-- Rows will be added dynamically -->
+    </tbody>
+  </table>
+
+  <script>
+    const siteNames = [
+      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
+      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
+      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
+      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
+      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
+    ];
+
+    const statusOptions = [
+      "VRR Working well",
+      "VRR not working - Needs team check & care",
+      "VRR show low recovery - Needs team check & care",
+      "VRR Under observation"
+    ];
+
+    const responsiblePersons = [
+      "Non",
+      "Arjun Chakramanath",
+      "Ahmed Saif Ahmed Al Hadhrami",
+      "Said Ali Salim Bait Said",
+      "Sultan Al-Ruzaiqi",
+      "Unni - Compressor Team"
+    ];
+
+    const today = new Date().toLocaleDateString('en-GB');
+
+    const tableBody = document.getElementById("tableBody");
+
+    siteNames.forEach(site => {
+      const row = document.createElement("tr");
+
+      const siteCell = document.createElement("td");
+      siteCell.textContent = site;
+      row.appendChild(siteCell);
+
+      const dateCell = document.createElement("td");
+      dateCell.textContent = today;
+      dateCell.style.direction = "ltr";
+      row.appendChild(dateCell);
+
+      const statusCell = document.createElement("td");
+      const statusSelect = document.createElement("select");
+      statusOptions.forEach(status => {
+        const option = document.createElement("option");
+        option.value = option.text = status;
+        statusSelect.appendChild(option);
+      });
+      statusCell.appendChild(statusSelect);
+      row.appendChild(statusCell);
+
+      const pictureCell = document.createElement("td");
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = "image/*";
+      pictureCell.appendChild(fileInput);
+      row.appendChild(pictureCell);
+
+      const issueCell = document.createElement("td");
+      const issueTextarea = document.createElement("textarea");
+      issueTextarea.rows = 2;
+      issueCell.appendChild(issueTextarea);
+      row.appendChild(issueCell);
+
+      const planCell = document.createElement("td");
+      const planTextarea = document.createElement("textarea");
+      planTextarea.rows = 2;
+      planCell.appendChild(planTextarea);
+      row.appendChild(planCell);
+
+      const personCell = document.createElement("td");
+      const personSelect = document.createElement("select");
+      responsiblePersons.forEach(person => {
+        const option = document.createElement("option");
+        option.value = option.text = person;
+        personSelect.appendChild(option);
+      });
+      personCell.appendChild(personSelect);
+      row.appendChild(personCell);
+
+      const hseCell = document.createElement("td");
+      const hseTextarea = document.createElement("textarea");
+      hseTextarea.rows = 2;
+      hseCell.appendChild(hseTextarea);
+      row.appendChild(hseCell);
+
+      tableBody.appendChild(row);
+    });
+
+    function exportToExcel() {
+      const table = document.getElementById("maintenanceTable");
+      const wb = XLSX.utils.table_to_book(table, { sheet: "Maintenance Report" });
+      XLSX.writeFile(wb, "VRRefiner_Maintenance_Report.xlsx");
+    }
+  </script>
+
+</body>
+</html>
