@@ -1,163 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>VRRefiner Maintenance</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: "Times New Roman", serif;
+      font-size: 12px;
+      background-color: #f7f9fc;
+      padding: 30px;
     }
 
     h1 {
       text-align: center;
+      color: #2e3c50;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
+      margin-top: 25px;
       table-layout: fixed;
-    }
-
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      vertical-align: top;
-    }
-
-    th {
-      background-color: #f4f4f4;
-    }
-
-    textarea {
-      width: 100%;
-      resize: vertical;
-    }
-
-    select, input[type="file"] {
-      width: 100%;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>VRRefiner Maintenance</h1>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Site Name</th>
-        <th>Inspection Date</th>
-        <th>Device Status</th>
-        <th>Issue Picture</th>
-        <th>Issues Notes</th>
-        <th>Work Plan</th>
-        <th>Responsible Person</th>
-        <th>Needed HSE Documents</th>
-      </tr>
-    </thead>
-    <tbody id="maintenanceTable">
-      <!-- Rows will be generated dynamically -->
-    </tbody>
-  </table>
-
-  <script>
-    const siteNames = [
-      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
-      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
-      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
-      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
-      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
-    ];
-
-    const statusOptions = [
-      "VRR Working well",
-      "VRR not working - Needs team check & care",
-      "VRR show low recovery - Needs team check & care",
-      "VRR Under observation"
-    ];
-
-    const responsiblePersons = [
-      "Arjun Chakramanath",
-      "Ahmed Saif Ahmed Al Hadhrami",
-      "Said Ali Salim Bait Said",
-      "Sultan Al-Ruzaiqi",
-      "Unni - Compressor Team"
-    ];
-
-    const today = new Date().toLocaleDateString('en-GB'); // e.g. "01/05/2025"
-
-    const table = document.getElementById("maintenanceTable");
-
-    siteNames.forEach(site => {
-      const row = document.createElement("tr");
-
-      // Site Name
-      const siteCell = document.createElement("td");
-      siteCell.textContent = site;
-      row.appendChild(siteCell);
-
-      // Inspection Date
-      const dateCell = document.createElement("td");
-      dateCell.textContent = today;
-      dateCell.style.direction = "ltr"; // Make date left-to-right
-      row.appendChild(dateCell);
-
-      // Device Status
-      const statusCell = document.createElement("td");
-      const statusSelect = document.createElement("select");
-      statusOptions.forEach(status => {
-        const option = document.createElement("option");
-        option.value = option.text = status;
-        statusSelect.appendChild(option);
-      });
-      statusCell.appendChild(statusSelect);
-      row.appendChild(statusCell);
-
-      // Issue Picture
-      const pictureCell = document.createElement("td");
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = "image/*";
-      pictureCell.appendChild(fileInput);
-      row.appendChild(pictureCell);
-
-      // Issues Notes
-      const issueCell = document.createElement("td");
-      const issueTextarea = document.createElement("textarea");
-      issueTextarea.rows = 2;
-      issueCell.appendChild(issueTextarea);
-      row.appendChild(issueCell);
-
-      // Work Plan
-      const planCell = document.createElement("td");
-      const planTextarea = document.createElement("textarea");
-      planTextarea.rows = 2;
-      planCell.appendChild(planTextarea);
-      row.appendChild(planCell);
-
-      // Responsible Person
-      const personCell = document.createElement("td");
-      const personSelect = document.createElement("select");
-      responsiblePersons.forEach(person => {
-        const option = document.createElement("option");
-        option.value = option.text = person;
-        personSelect.appendChild(option);
-      });
-      personCell.appendChild(personSelect);
-      row.appendChild(personCell);
-
-      // Needed HSE Documents
-      const hseCell = document.createElement("td");
-      const hseTextarea = document.createElement("textarea");
-      hseTextarea.rows = 2;
-      hseCell.appendChild(hseTextarea);
-      row.appendChild(hseCell);
-
-      table.appendChild(row);
-    });
-  </script>
-
-</body>
-</html>
+      background-color
