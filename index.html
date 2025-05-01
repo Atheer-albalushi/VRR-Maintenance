@@ -1,48 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Machine Maintenance Log</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Machine Maintenance Tracker</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
+      margin-top: 20px;
     }
     th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
-      vertical-align: top;
+      border: 1px solid #aaa;
+      padding: 8px;
+      text-align: left;
     }
-    input, select, textarea {
+    th {
+      background-color: #f2f2f2;
+    }
+    textarea {
       width: 100%;
-      box-sizing: border-box;
+      resize: vertical;
+    }
+    select, input[type="file"] {
+      width: 100%;
     }
   </style>
 </head>
 <body>
 
-  <h1>Machine Maintenance Log</h1>
+  <h1>Machine Maintenance Tracker</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Site Name</th>
+        <th>Inspection Date</th>
+        <th>Device Status</th>
+        <th>Issue Picture</th>
+        <th>Issues Notes</th>
+        <th>Work Plan</th>
+        <th>Responsible Person</th>
+        <th>Needed HSE Documents</th>
+      </tr>
+    </thead>
+    <tbody id="maintenanceTableBody">
+      <!-- Rows will be generated here -->
+    </tbody>
+  </table>
 
-  <form>
-    <table>
-      <thead>
-        <tr>
-          <th>Site Name</th>
-          <th>Inspection Date</th>
-          <th>Device Status</th>
-          <th>Issue Picture</th>
-          <th>Issues Notes</th>
-          <th>Work Plan</th>
-          <th>Responsible Person</th>
-          <th>Needed HSE Documents</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><input type="text" name="site_name" placeholder="Enter site name" required></_
+  <script>
+    const deviceStatusOptions = [
+      "VRR Working well",
+      "VRR not working - Needs team check & care",
+      "VRR show low recovery - Needs team check & care",
+      "VRR Under observation"
+    ];
 
+    const responsiblePersons = [
+      "John Smith",
+      "Sara Ahmed",
+      "Mohamed Ali",
+      "Fatima Noor",
+      "Maintenance Team"
+    ];
+
+    const tableBody = document.getElementById('maintenanceTableBody');
+    const today = new Date().toISOString().split('T')[0];
+
+    for (let i = 1; i <= 25; i++) {
+      const row = document.createElement('tr');
+
+      // Site Name
+      const siteCell = document.createElement('td');
+      siteCell.textContent = `Site ${i}`;
+      row.appendChild(siteCell);
+
+      // Inspection Date
+      const dateCell = document.createElement('td');
+      dateCell.textContent = today;
+      row.appendChild(dateCell);
+
+      // Device Status
+      const statusCell = document.createElement('td');
+      const statusSelect = document.createElement('select');
+      deviceStatusOptions.forEach(option => {
+        const opt = document.createElement('option');
+        opt.value = opt.textContent = option;
+        statusSelect.appendChild(opt);
+      });
+      statusCell.appendChild(statusSelect);
+      row.appendChild(statusCell);
+
+      // Issue Picture
+      const picCell = document.createElement('td');
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      picCell.appendChild(fileInput);
+      row.appendChild(picCell);
+
+      // Issues Notes
+      const issueNotesCell = document.createElement('td');
+      const issueTextarea = document.createElement('textarea');
+      issueTextarea.rows = 2;
+      issueNotesCell.appendChild(issueTextarea);
+      row.appendChild(issueNotesCell);
+
+      // Work Plan
+      const planCell = document.createElement('td');
+      const planTextarea = document.createElement('textarea');
+      planTextarea.rows = 2;
+      planCell.appendChild(planTextarea);
+      row.appendChild(planCell);
+
+      // Responsible Person
+      const personCell = document.createElement('td');
+      const personSelect = document.createElement('select');
+      responsiblePersons.forEach(person => {
+        const opt = document.createElement('option');
+        opt.value = opt.textContent = person;
+        personSelect.appendChild(opt);
+      });
+      personCell.appendChild(personSelect);
+      row.appendChild(personCell);
+
+      // Needed HSE Documents
+      const hseCell = document.createElement('td');
+      const hseTextarea = document.createElement('textarea');
+      hseTextarea.rows = 2;
+      hseCell.appendChild(hseTextarea);
+      row.appendChild(hseCell);
+
+      tableBody.appendChild(row);
+    }
+  </script>
+</body>
+</html>
