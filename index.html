@@ -5,52 +5,64 @@
   <title>VRRefiner Maintenance</title>
   <style>
     body {
-      font-family: "Times New Roman", Times, serif;
-      font-size: 14px;
-      background-color: #f4f4f4;
+      font-family: "Times New Roman", serif;
+      font-size: 12px;
+      background-color: #f4f6f9;
       padding: 20px;
     }
 
     h1 {
       text-align: center;
-      color: #2e4a62;
+      color: #2e3c50;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
+      background-color: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
       border: 1px solid #ccc;
       padding: 8px;
       text-align: left;
+      vertical-align: top;
     }
 
     th {
-      background-color: #2e4a62;
-      color: white;
+      background-color: #d9e6f2;
     }
 
     select, textarea, input[type="file"] {
       width: 100%;
-      font-family: "Times New Roman", Times, serif;
+      font-family: "Times New Roman", serif;
       font-size: 12px;
     }
 
-    .green { background-color: #d4edda; }
-    .red { background-color: #f8d7da; }
-    .yellow { background-color: #fff3cd; }
-    .purple { background-color: #e0d4f7; }
-    .white { background-color: #fefefe; }
+    .status-green { color: green; }
+    .status-red { color: red; }
+    .status-yellow { color: goldenrod; }
+    .status-purple { color: purple; }
+    .status-white { color: gray; }
+
+    #saveBtn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 12px;
+      font-family: "Times New Roman", serif;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
-
   <h1>VRRefiner Maintenance</h1>
-  <table>
+
+  <button id="saveBtn" onclick="exportToExcel()">Save to Excel</button>
+
+  <table id="maintenanceTable">
     <thead>
       <tr>
         <th>Site Name</th>
@@ -63,60 +75,47 @@
         <th>Needed HSE Documents</th>
       </tr>
     </thead>
-    <tbody id="maintenance-table-body">
-      <!-- Rows will be inserted by JavaScript -->
-    </tbody>
-  </table>
-
-  <script>
-    const sites = [
-      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
-      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
-      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
-      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
-      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
-    ];
-
-    const statuses = {
-      "VRR Working well": "green",
-      "VRR not working-Needs team check & care": "red",
-      "VRR show low recovery-Needs team check & care": "red",
-      "VRR Under observation": "yellow",
-      "Oman Oil Responsibility": "purple",
-      "Need Cleaning - See the graph": "red",
-      "VRR Under Maintenance": "white"
-    };
-
-    const persons = ["None", "Arjun Chakramanath", "Ahmed Saif Ahmed Al Hadhrami", "Said Ali Salim Bait Said", "Sultan Al-Ruzaiqi", "Unni - Compressor Team"];
-
-    const tableBody = document.getElementById("maintenance-table-body");
-    const today = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
-
-    sites.forEach(site => {
-      const row = document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${site}</td>
-        <td dir="ltr">${today}</td>
+    <tbody>
+      <tr>
+        <td>RUSAYL OMAN OIL 7307</td>
+        <td style="direction: ltr;"><script>document.write(new Date().toLocaleDateString('en-GB'));</script></td>
         <td>
-          <select onchange="this.className = '${Object.values(statuses).join(' ')}'; this.classList.add('${statuses[this.value] || ''}')">
-            ${Object.keys(statuses).map(status => `<option value="${status}">${status}</option>`).join("")}
+          <select>
+            <option class="status-green">VRR Working well</option>
+            <option class="status-red">VRR not working-Needs team check & care</option>
+            <option class="status-red">VRR show low recovery-Needs team check & care</option>
+            <option class="status-yellow">VRR Under observation</option>
+            <option class="status-purple">Oman Oil Responsibility</option>
+            <option class="status-red">Need Cleaning - See the graph</option>
+            <option class="status-white">VRR Under Maintenance</option>
           </select>
         </td>
         <td><input type="file" accept="image/*"></td>
-        <td><textarea></textarea></td>
-        <td><textarea></textarea></td>
+        <td><textarea rows="2"></textarea></td>
+        <td><textarea rows="2"></textarea></td>
         <td>
           <select>
-            ${persons.map(person => `<option>${person}</option>`).join("")}
+            <option>Non</option>
+            <option>Arjun Chakramanath</option>
+            <option>Ahmed Saif Ahmed Al Hadhrami</option>
+            <option>Said Ali Salim Bait Said</option>
+            <option>Sultan Al-Ruzaiqi</option>
+            <option>Unni - Compressor Team</option>
           </select>
         </td>
-        <td><textarea></textarea></td>
-      `;
+        <td><textarea rows="2"></textarea></td>
+      </tr>
+    </tbody>
+  </table>
 
-      tableBody.appendChild(row);
-    });
+  <!-- SheetJS Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script>
+    function exportToExcel() {
+      var table = document.getElementById("maintenanceTable");
+      var wb = XLSX.utils.table_to_book(table, { sheet: "Maintenance" });
+      XLSX.writeFile(wb, "VRRefiner_Maintenance.xlsx");
+    }
   </script>
-
 </body>
 </html>
