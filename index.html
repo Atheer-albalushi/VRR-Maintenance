@@ -32,16 +32,12 @@
     tr:nth-child(even) {
       background-color: #f2f2f2;
     }
-    select, input[type="text"], textarea {
+    select, input[type="text"], textarea, input[type="date"] {
       width: 100%;
       font-family: "Times New Roman", serif;
       font-size: 12px;
     }
-    input[type="file"], input[type="date"] {
-      font-family: "Times New Roman", serif;
-      font-size: 12px;
-    }
-    .save-button {
+    .button {
       margin-top: 20px;
       padding: 10px 20px;
       font-size: 14px;
@@ -50,16 +46,19 @@
       color: white;
       border: none;
       cursor: pointer;
-      display: block;
       margin-left: auto;
       margin-right: auto;
+      display: block;
     }
-    .save-button:hover {
+    .button:hover {
       background-color: #1a242f;
     }
   </style>
+  <!-- jsPDF and html2canvas CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
-    window.onload = function() {
+    window.onload = function () {
       const today = new Date().toISOString().slice(0, 10);
       document.querySelectorAll('.date-field').forEach(el => {
         el.value = today;
@@ -85,7 +84,21 @@
       });
 
       console.log("Saved Data:", data);
-      alert("Changes have been collected (check browser console). Backend save not yet implemented.");
+      alert("Changes have been collected (check console).");
+    }
+
+    async function downloadPDF() {
+      const element = document.querySelector("table");
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF('l', 'pt', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
+      pdf.save("VRRefiner_Maintenance.pdf");
     }
   </script>
 </head>
@@ -152,7 +165,8 @@
   </tbody>
 </table>
 
-<button class="save-button" onclick="saveChanges()">Save Changes</button>
+<button class="button" onclick="saveChanges()">Save Changes</button>
+<button class="button" onclick="downloadPDF()">Download as PDF</button>
 
 </body>
 </html>
