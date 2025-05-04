@@ -1,85 +1,157 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>VRRefiner Maintenance</title>
   <style>
     body {
-      font-family: "Times New Roman", serif;
+      font-family: "Times New Roman", Times, serif;
       font-size: 12px;
-      background-color: #f0f4f8;
+      background-color: #f4f7f9;
       padding: 20px;
-      color: #2c3e50;
     }
+
     h1 {
       text-align: center;
-      margin-bottom: 30px;
-      color: #1a1a1a;
+      color: #003366;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: white;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      background-color: #ffffff;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
     }
+
     th, td {
-      border: 1px solid #dcdcdc;
+      border: 1px solid #cccccc;
       padding: 8px;
       text-align: left;
-      vertical-align: top;
     }
+
     th {
-      background-color: #005f73;
-      color: white;
+      background-color: #e1ecf4;
+      color: #003366;
     }
-    tr:nth-child(even) {
-      background-color: #f9f9f9;
-    }
-    select, input[type="text"], textarea, input[type="date"] {
+
+    select, textarea, input[type="date"] {
       width: 100%;
-      font-family: "Times New Roman", serif;
+      font-family: "Times New Roman", Times, serif;
       font-size: 12px;
-      padding: 4px;
       box-sizing: border-box;
     }
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .button {
+
+    button {
       padding: 10px 20px;
-      font-size: 14px;
-      font-family: "Times New Roman", serif;
-      background-color: #005f73;
+      background-color: #003366;
       color: white;
       border: none;
-      border-radius: 4px;
+      font-size: 12px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
     }
-    .button:hover {
-      background-color: #003d4d;
+
+    button:hover {
+      background-color: #00509e;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
+</head>
+<body>
+
+  <h1>VRRefiner Maintenance</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Site Name</th>
+        <th>Inspection Date</th>
+        <th>Device Status</th>
+        <th>Issue Picture</th>
+        <th>Issue Notes</th>
+        <th>Work Plan</th>
+        <th>Responsible Person</th>
+        <th>Needed HSE Documents</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <button onclick="saveChanges()">Save Changes</button>
+
   <script>
-    window.onload = function () {
-      const today = new Date().toISOString().slice(0, 10);
-      document.querySelectorAll('.date-field').forEach(el => {
-        el.value = today;
-      });
+    // Firebase Config - replace with your actual project config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
     };
 
-    function saveChanges() {
-      const rows = document.querySelectorAll("tbody tr");
-      const data = [];
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
 
-      rows.forEach(row => {
+    const siteNames = [
+      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
+      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
+      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
+      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
+      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
+    ];
+
+    const deviceStatusOptions = [
+      "VRR Working well",
+      "VRR not working-Needs team check & care",
+      "VRR show low recovery-Needs team check & care",
+      "VRR Under observation"
+    ];
+
+    const responsiblePersons = [
+      "Non", "Arjun Chakramanath", "Ahmed Saif Ahmed Al Hadhrami",
+      "Said Ali Salim Bait Said", "Sultan Al-Ruzaiqi", "Unni - Compressor Team"
+    ];
+
+    // Create table rows
+    function buildTable() {
+      const tbody = document.getElementById("table-body");
+      const today = new Date().toISOString().split("T")[0];
+
+      siteNames.forEach((site, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${site}</td>
+          <td><input type="date" value="${today}" /></td>
+          <td>
+            <select>${deviceStatusOptions.map(opt => `<option>${opt}</option>`).join("")}</select>
+          </td>
+          <td><input type="file" accept="image/*" /></td>
+          <td><textarea></textarea></td>
+          <td><textarea></textarea></td>
+          <td>
+            <select>${responsiblePersons.map(opt => `<option>${opt}</option>`).join("")}</select>
+          </td>
+          <td><textarea></textarea></td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    }
+
+    // Save to Firestore
+    async function saveChanges() {
+      const rows = document.querySelectorAll("tbody tr");
+      const batch = db.batch();
+
+      rows.forEach((row, index) => {
         const cells = row.querySelectorAll("td");
-        const rowData = {
+        const docRef = db.collection("vrrefiner-maintenance").doc(`site-${index}`);
+
+        batch.set(docRef, {
           siteName: cells[0].innerText,
           inspectionDate: cells[1].querySelector("input").value,
           deviceStatus: cells[2].querySelector("select").value,
@@ -87,97 +159,36 @@
           workPlan: cells[5].querySelector("textarea").value,
           responsiblePerson: cells[6].querySelector("select").value,
           hseDocs: cells[7].querySelector("textarea").value
-        };
-        data.push(rowData);
+        });
       });
 
-      console.log("Saved Data:", data);
-      alert("Changes have been collected. Check console for details.");
+      await batch.commit();
+      alert("Changes saved to Firebase!");
     }
 
-    async function downloadPDF() {
-      const element = document.querySelector("table");
-      const canvas = await html2canvas(element, { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
+    // Load from Firestore on startup
+    async function loadData() {
+      const snapshot = await db.collection("vrrefiner-maintenance").get();
+      const rows = document.querySelectorAll("tbody tr");
 
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF('l', 'pt', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      snapshot.forEach((doc, index) => {
+        const data = doc.data();
+        const cells = rows[index].querySelectorAll("td");
 
-      pdf.addImage(imgData, 'PNG', 10, 10, pdfWidth - 20, pdfHeight);
-      pdf.save("VRRefiner_Maintenance.pdf");
+        cells[1].querySelector("input").value = data.inspectionDate || "";
+        cells[2].querySelector("select").value = data.deviceStatus || "";
+        cells[4].querySelector("textarea").value = data.issueNotes || "";
+        cells[5].querySelector("textarea").value = data.workPlan || "";
+        cells[6].querySelector("select").value = data.responsiblePerson || "";
+        cells[7].querySelector("textarea").value = data.hseDocs || "";
+      });
     }
+
+    // Build table then load data
+    window.onload = function () {
+      buildTable();
+      loadData();
+    };
   </script>
-</head>
-<body>
-
-<h1>VRRefiner Maintenance</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Site Name</th>
-      <th>Inspection Date</th>
-      <th>Device Status</th>
-      <th>Issue Picture</th>
-      <th>Issues Notes</th>
-      <th>Work Plan</th>
-      <th>Responsible Person</th>
-      <th>Needed HSE Documents</th>
-    </tr>
-  </thead>
-  <tbody>
-    <script>
-      const siteNames = [
-        "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
-        "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
-        "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
-        "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
-        "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
-      ];
-
-      const tableBody = document.currentScript.parentElement;
-
-      siteNames.forEach(site => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${site}</td>
-          <td><input type="date" class="date-field" style="direction: ltr;"></td>
-          <td>
-            <select>
-              <option>VRR Working well</option>
-              <option>VRR not working-Needs team check & care</option>
-              <option>VRR show low recovery-Needs team check & care</option>
-              <option>VRR Under observation</option>
-            </select>
-          </td>
-          <td><input type="file" accept="image/*"></td>
-          <td><textarea rows="2"></textarea></td>
-          <td><textarea rows="2"></textarea></td>
-          <td>
-            <select>
-              <option>Non</option>
-              <option>Arjun Chakramanath</option>
-              <option>Ahmed Saif Ahmed Al Hadhrami</option>
-              <option>Said Ali Salim Bait Said</option>
-              <option>Sultan Al-Ruzaiqi</option>
-              <option>Unni - Compressor Team</option>
-            </select>
-          </td>
-          <td><textarea rows="2"></textarea></td>
-        `;
-        tableBody.appendChild(row);
-      });
-    </script>
-  </tbody>
-</table>
-
-<div class="button-container">
-  <button class="button" onclick="saveChanges()">Save Changes</button>
-  <button class="button" onclick="downloadPDF()">Download as PDF</button>
-</div>
-
 </body>
 </html>
-
