@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <title>VRRefiner Maintenance</title>
@@ -7,167 +7,122 @@
     body {
       font-family: "Times New Roman", serif;
       font-size: 12px;
-      background-color: #f7f9fc;
-      padding: 30px;
+      background-color: #f4f7f9;
+      margin: 20px;
     }
-
     h1 {
       text-align: center;
-      color: #2e3c50;
+      color: #2c3e50;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 25px;
-      table-layout: fixed;
-      background-color: #ffffff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-top: 20px;
     }
-
     th, td {
       border: 1px solid #ccc;
       padding: 8px;
-      vertical-align: top;
       text-align: left;
+      vertical-align: top;
     }
-
     th {
-      background-color: #d9e6f2;
-      color: #000;
+      background-color: #2c3e50;
+      color: white;
     }
-
-    textarea, select, input[type="file"] {
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    select, input[type="text"], textarea {
       width: 100%;
       font-family: "Times New Roman", serif;
       font-size: 12px;
-      box-sizing: border-box;
     }
-
-    textarea {
-      resize: vertical;
+    input[type="file"] {
+      font-family: "Times New Roman", serif;
+      font-size: 12px;
     }
   </style>
+  <script>
+    // Fill today's date in all date fields
+    window.onload = function() {
+      const today = new Date().toISOString().slice(0, 10);
+      document.querySelectorAll('.date-field').forEach(el => {
+        el.value = today;
+      });
+    };
+  </script>
 </head>
 <body>
 
-  <h1>VRRefiner Maintenance</h1>
+<h1>VRRefiner Maintenance</h1>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Site Name</th>
-        <th>Inspection Date</th>
-        <th>Device Status</th>
-        <th>Issue Picture</th>
-        <th>Issues Notes</th>
-        <th>Work Plan</th>
-        <th>Responsible Person</th>
-        <th>Needed HSE Documents</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-      <!-- Dynamic content will be inserted here -->
-    </tbody>
-  </table>
+<table>
+  <thead>
+    <tr>
+      <th>Site Name</th>
+      <th>Inspection Date</th>
+      <th>Device Status</th>
+      <th>Issue Picture</th>
+      <th>Issues Notes</th>
+      <th>Work Plan</th>
+      <th>Responsible Person</th>
+      <th>Needed HSE Documents</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Repeat this row for each site -->
+    <!-- Site names filled below -->
+    <!-- Copy/paste to replicate 25 times -->
+    <!-- Example for 1 site -->
+    <!-- Repeat this for each site below -->
+    <!-- Site loop starts here -->
+    <!-- Replace "RUSAYL OMAN OIL 7307" with other names for the rest -->
+    <!-- Begin looping 25 times with different site names -->
+    <!-- For brevity, I’m showing 3 entries—you’ll replicate the rest -->
+    <script>
+      const siteNames = [
+        "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
+        "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
+        "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
+        "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
+        "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
+      ];
 
-  <script>
-    const siteNames = [
-      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
-      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
-      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
-      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
-      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
-    ];
+      const tableBody = document.currentScript.parentElement.querySelector("tbody");
 
-    const statusOptions = [
-      "VRR Working well",
-      "VRR not working - Needs team check & care",
-      "VRR show low recovery - Needs team check & care",
-      "VRR Under observation"
-    ];
-
-    const responsiblePersons = [
-      "Non",
-      "Arjun Chakramanath",
-      "Ahmed Saif Ahmed Al Hadhrami",
-      "Said Ali Salim Bait Said",
-      "Sultan Al-Ruzaiqi",
-      "Unni - Compressor Team"
-    ];
-
-    const today = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
-
-    const tableBody = document.getElementById("tableBody");
-
-    siteNames.forEach(site => {
-      const row = document.createElement("tr");
-
-      // Site Name
-      const siteCell = document.createElement("td");
-      siteCell.textContent = site;
-      row.appendChild(siteCell);
-
-      // Inspection Date
-      const dateCell = document.createElement("td");
-      dateCell.textContent = today;
-      dateCell.style.direction = "ltr";
-      row.appendChild(dateCell);
-
-      // Device Status
-      const statusCell = document.createElement("td");
-      const statusSelect = document.createElement("select");
-      statusOptions.forEach(status => {
-        const option = document.createElement("option");
-        option.value = option.text = status;
-        statusSelect.appendChild(option);
+      siteNames.forEach(site => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${site}</td>
+          <td><input type="date" class="date-field" style="direction: ltr;"></td>
+          <td>
+            <select>
+              <option>VRR Working well</option>
+              <option>VRR not working-Needs team check & care</option>
+              <option>VRR show low recovery-Needs team check & care</option>
+              <option>VRR Under observation</option>
+            </select>
+          </td>
+          <td><input type="file" accept="image/*"></td>
+          <td><textarea rows="2"></textarea></td>
+          <td><textarea rows="2"></textarea></td>
+          <td>
+            <select>
+              <option>Non</option>
+              <option>Arjun Chakramanath</option>
+              <option>Ahmed Saif Ahmed Al Hadhrami</option>
+              <option>Said Ali Salim Bait Said</option>
+              <option>Sultan Al-Ruzaiqi</option>
+              <option>Unni - Compressor Team</option>
+            </select>
+          </td>
+          <td><textarea rows="2"></textarea></td>
+        `;
+        tableBody.appendChild(row);
       });
-      statusCell.appendChild(statusSelect);
-      row.appendChild(statusCell);
-
-      // Issue Picture
-      const pictureCell = document.createElement("td");
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = "image/*";
-      pictureCell.appendChild(fileInput);
-      row.appendChild(pictureCell);
-
-      // Issues Notes
-      const issueNotesCell = document.createElement("td");
-      const issueTextarea = document.createElement("textarea");
-      issueTextarea.rows = 2;
-      issueNotesCell.appendChild(issueTextarea);
-      row.appendChild(issueNotesCell);
-
-      // Work Plan
-      const planCell = document.createElement("td");
-      const planTextarea = document.createElement("textarea");
-      planTextarea.rows = 2;
-      planCell.appendChild(planTextarea);
-      row.appendChild(planCell);
-
-      // Responsible Person
-      const personCell = document.createElement("td");
-      const personSelect = document.createElement("select");
-      responsiblePersons.forEach(person => {
-        const option = document.createElement("option");
-        option.value = option.text = person;
-        personSelect.appendChild(option);
-      });
-      personCell.appendChild(personSelect);
-      row.appendChild(personCell);
-
-      // HSE Documents
-      const hseCell = document.createElement("td");
-      const hseTextarea = document.createElement("textarea");
-      hseTextarea.rows = 2;
-      hseCell.appendChild(hseTextarea);
-      row.appendChild(hseCell);
-
-      tableBody.appendChild(row);
-    });
-  </script>
+    </script>
+  </tbody>
+</table>
 
 </body>
 </html>
