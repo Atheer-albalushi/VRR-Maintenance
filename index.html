@@ -1,109 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>VRRefiner Maintenance</title>
   <style>
     body {
-      font-family: 'Times New Roman', Times, serif;
+      font-family: "Times New Roman", Times, serif;
       font-size: 12px;
       background-color: #f4f4f4;
       padding: 20px;
     }
+
+    h1 {
+      text-align: center;
+      color: #2e4a62;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background: white;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
+
     th, td {
       border: 1px solid #ccc;
-      padding: 10px;
+      padding: 8px;
       text-align: left;
     }
+
     th {
-      background-color: #4CAF50;
+      background-color: #2e4a62;
       color: white;
     }
-    select option[value="VRR Working well"] {
-      background-color: lightgreen;
+
+    select, textarea, input[type="file"] {
+      width: 100%;
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12px;
     }
-    select option[value="VRR not working-Needs team check & care"],
-    select option[value="VRR show low recovery-Needs team check & care"],
-    select option[value="Need Cleaning - See the graph"] {
-      background-color: lightcoral;
-    }
-    select option[value="VRR Under observation"] {
-      background-color: lightyellow;
-    }
-    select option[value="Oman Oil Responsibility"] {
-      background-color: plum;
-    }
-    select option[value="VRR Under Maintenance"] {
-      background-color: white;
-    }
+
+    .green { background-color: #d4edda; }
+    .red { background-color: #f8d7da; }
+    .yellow { background-color: #fff3cd; }
+    .purple { background-color: #e0d4f7; }
+    .white { background-color: #fefefe; }
   </style>
 </head>
 <body>
-  <h1>VRRefiner Maintenance</h1>
 
-  <table id="maintenanceTable">
+  <h1>VRRefiner Maintenance</h1>
+  <table>
     <thead>
       <tr>
         <th>Site Name</th>
         <th>Inspection Date</th>
         <th>Device Status</th>
         <th>Issue Picture</th>
-        <th>Issue Notes</th>
+        <th>Issues Notes</th>
         <th>Work Plan</th>
         <th>Responsible Person</th>
         <th>Needed HSE Documents</th>
       </tr>
     </thead>
-    <tbody id="dataBody"></tbody>
+    <tbody id="maintenance-table-body">
+      <!-- Rows will be inserted by JavaScript -->
+    </tbody>
   </table>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  <script>
+    const sites = [
+      "RUSAYL OMAN OIL 7307", "SQU", "MAABILLAH MEGA", "SEH AHMAR", "HALBAN EXPRESSWAY",
+      "AL ANSAB EXPRESSWAY", "BURJ AL SAHWA", "HAY ALTADHAMUN", "SUWAIQ", "BURAIMI HW",
+      "FALAJ ALQABAIL", "GHALA EXPRESSWAY", "QURUM SS", "MAWALEH CITY CENTRE SS", "ALKHUWAIR",
+      "MANAL SS", "AL BURAIK", "SARFEET", "AL FATEH", "AL SAAD NEW",
+      "MULADAH SS", "MIRBAT", "SHINAS FILLING STATION", "AL WADI SS", "SUSTAINABLE OASIS FS"
+    ];
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyA-PyQT94143VtIrUU9npAyhesPftgOd_0",
-      authDomain: "vrrefiner-maintenance.firebaseapp.com",
-      projectId: "vrrefiner-maintenance",
-      storageBucket: "vrrefiner-maintenance.appspot.com",
-      messagingSenderId: "1033085544661",
-      appId: "1:1033085544661:web:6bb485da437ba49de35a5c",
-      measurementId: "G-0YTYC4P4TG"
+    const statuses = {
+      "VRR Working well": "green",
+      "VRR not working-Needs team check & care": "red",
+      "VRR show low recovery-Needs team check & care": "red",
+      "VRR Under observation": "yellow",
+      "Oman Oil Responsibility": "purple",
+      "Need Cleaning - See the graph": "red",
+      "VRR Under Maintenance": "white"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const persons = ["None", "Arjun Chakramanath", "Ahmed Saif Ahmed Al Hadhrami", "Said Ali Salim Bait Said", "Sultan Al-Ruzaiqi", "Unni - Compressor Team"];
 
-    async function loadData() {
-      const querySnapshot = await getDocs(collection(db, "maintenanceData"));
-      const tbody = document.getElementById("dataBody");
-      tbody.innerHTML = "";
+    const tableBody = document.getElementById("maintenance-table-body");
+    const today = new Date().toLocaleDateString('en-GB'); // DD/MM/YYYY
 
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const row = document.createElement("tr");
+    sites.forEach(site => {
+      const row = document.createElement("tr");
 
-        row.innerHTML = `
-          <td>${data.siteName}</td>
-          <td>${data.inspectionDate}</td>
-          <td>${data.deviceStatus}</td>
-          <td>${data.issuePicture ? '<a href="' + data.issuePicture + '" target="_blank">View</a>' : ''}</td>
-          <td>${data.issueNotes || ""}</td>
-          <td>${data.workPlan || ""}</td>
-          <td>${data.responsiblePerson}</td>
-          <td>${data.hseDocuments || ""}</td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
+      row.innerHTML = `
+        <td>${site}</td>
+        <td dir="ltr">${today}</td>
+        <td>
+          <select onchange="this.className = '${Object.values(statuses).join(' ')}'; this.classList.add('${statuses[this.value] || ''}')">
+            ${Object.keys(statuses).map(status => `<option value="${status}">${status}</option>`).join("")}
+          </select>
+        </td>
+        <td><input type="file" accept="image/*"></td>
+        <td><textarea></textarea></td>
+        <td><textarea></textarea></td>
+        <td>
+          <select>
+            ${persons.map(person => `<option>${person}</option>`).join("")}
+          </select>
+        </td>
+        <td><textarea></textarea></td>
+      `;
 
-    loadData();
+      tableBody.appendChild(row);
+    });
   </script>
+
 </body>
 </html>
